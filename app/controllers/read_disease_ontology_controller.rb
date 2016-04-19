@@ -3,7 +3,9 @@ class ReadDiseaseOntologyController < ApplicationController
   	@is_a = []
   	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
       f.each_line do |line|
-  	  	@is_a.push(line)
+      	if line.include? "is_a"
+  	  		@is_a.push(line)
+  	  	end
   	  end
 	end
 	# File is closed automatically at end of block
