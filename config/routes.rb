@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'read_disease_ontology/is_a'
+  get 'read_disease_ontology/complicated_by'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
