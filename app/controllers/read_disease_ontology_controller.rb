@@ -4,7 +4,10 @@ class ReadDiseaseOntologyController < ApplicationController
   	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
       f.each_line do |line|
       	if line.include? "is_a"
-  	  		@is_a.push(line.split(/! */)[1])
+      		property = line.split(/! */)[1]
+      		if ! @is_a.include? property
+  	  			@is_a.push(property)
+  	  		end
   	  	end
   	  end
 	end
