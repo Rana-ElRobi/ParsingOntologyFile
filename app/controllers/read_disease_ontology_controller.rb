@@ -11,21 +11,27 @@ class ReadDiseaseOntologyController < ApplicationController
   #	=>	add the id in array of values 	
   def is_a
   	@is_a = Hash.new { |is_a,key| is_a[key]= [] }
-
+    latest_id = ""
+    latest_is_a = ""
   	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
       f.each_line do |line|
-      	if line.include? "id"
-      		id = line.split(/: */)[2]
+  
+        if line.include? "[Term]"
+          latest_id = ""
+          latest_is_a = ""
+        end
 
-      	elsif line.include? "is_a"
-      		property = line.split(/! */)[1]
-      		if ! @is_a.has_key?(property)  
-  	  			@is_a[property] = id
-  	  		end
-  	  	end
-  	  end
-	end
-	# File is closed automatically at end of block
+        if line.include? "id: DOID:"
+          latest_id = line.split(" ")[1]
+        elsif line.include? "is_a: DOID:"
+          latest_is_a = line.split(" ! ")[1]
+        end
+
+        if !latest_id.empty? and !latest_is_a.empty?
+          @is_a[latest_is_a] << latest_id
+        end
+    	end
+  	end
   end
 
 
@@ -38,7 +44,7 @@ class ReadDiseaseOntologyController < ApplicationController
       	if line.include? "id"
       		id = line.split(/: */)[2]
 
-      	elsif (line.include? "def: ") && (line.include? "complicated_by")
+      	elsif (line.include? "def: ") and (line.include? "complicated_by")
 	      		property = line.split(/, */)[1]
 	      	
       		if ! @complicated_by.has_key?(property)  
