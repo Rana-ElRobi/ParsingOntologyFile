@@ -38,20 +38,47 @@ class ReadDiseaseOntologyController < ApplicationController
 
   #Function That Gets all names of complicated_by
   def complicated_by
-  	@complicated_by = Hash.new { |complicated_by, key| complicated_by[key] = [] }
+
+  	#@TypeDef = Hash.new { |property, key| property[key] = [] }
+    @TypeDef = {transmitted_by: [] , results_in_formation_of: [] , results_in:  [] , realized_by_supression_with: [] , realized_by: [] , part_of:  [] , occurs_with:  [] , located_in:  [] , is_a: {} }
   	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
       f.each_line do |line|
-      	if line.include? "id"
-      		id = line.split(/: */)[2]
+        
+        #loop on all properties in m searching for 
+        @TypeDef.each do |property|
+          if line.include? "[Term]"
+            latest_id = ""
+            latest_is_a = ""
+          end #end if
 
-      	elsif (line.include? "def: ") and (line.include? "complicated_by")
-	      		property = line.split(/, */)[1]
-	      	
-      		if ! @complicated_by.has_key?(property)  
-  	  			@complicated_by[property] = id
-  	  		end
-  	  	end
-  	  end
+          #find ID of the current term
+          if line.include? "id: DOID:"
+            latest_id = line.split(" ")[1]
+          end #end if of id 
+
+          #if the typeDef key is "is_a"
+          if property[:key] = "is_a"
+
+
+          #all proprties in Def 
+          else
+            if (line.include? "def: ") and (line.include? property)
+              property[:key] << latest_id
+            end # End if of def 
+          
+
+          end #end checking type of property
+              
+
+        end #end loop on hash of TypeDef	
+        
+         
+        
+
+        
+
+      	
+      		
 	end
 	# File is closed automatically at end of block
   end
