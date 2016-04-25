@@ -3,19 +3,18 @@ class KDmethodController < ApplicationController
   #Read From file the AA and it's degree of hydrophobicity
   #loops on given sequence and puts each caharacter and its corresponding value in new hash 
   def seq_hydrophobicity (seq = "ACGTACGTACGTGGGGAAATTTTCCC")
-  	@K_D = Hash.new 
+    @k_d = Hash.new 
   	@seq_hydrophob = Hash.new 
-  	File.open("/home/rana/ParsingOntologyFile/k_D Method.txt", "r") do |f|
+  	File.open("#{Rails.root}/k_D Method.txt", "r") do |f|
   		#loop on each line
     	f.each_line do |line|
-    		aa = line.split(" , ")[0]
-        degree = line.split(" , ")[1]
-    		@K_D[:aa] = degree
+    		aa, degree = line.split(", ")
+    	  @k_d[aa] = degree
     	end #end loop on lines
 
     	#LOOP ON input seq
     	seq.split("").each do |char|
-    		@seq_hydrophob[:char] = @K_D[:char]
+    		@seq_hydrophob[char] = @k_d[char]
     	end #end loop on sequence
 
 
