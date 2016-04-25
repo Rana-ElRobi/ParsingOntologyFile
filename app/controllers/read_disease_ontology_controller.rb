@@ -36,7 +36,23 @@ class ReadDiseaseOntologyController < ApplicationController
 
 
 
-  #Function That Gets all names of complicated_by
+  #Function That Gets all IDs in all properties
+  #Open ontology file
+  #loop on each line
+  # => Clear current ID & current is_A type
+  # => Check if line has "ID :"
+  # => # => Take current ID
+  # => check if line starts with "is_a:"
+  # => # => get the type of is_a 
+  # => # => check if is_a type is not added before to is_a keys
+  # => # => # => if yes : add key & id
+  # => # => # => if not : Add id only to existing one
+  # => elsif check if line starts with "def:"
+  # => # => Loop on all deftypes 
+  # => # => # => check if current defType included in def line 
+  # => # => # => # => add current ID to current deftype [value]
+  #End Loop on ontology file
+
   def complicated_by
 
   	#@TypeDef = Hash.new { |property, key| property[key] = [] }
@@ -83,5 +99,5 @@ class ReadDiseaseOntologyController < ApplicationController
 	# File is closed automatically at end of block
   end
 
-
+end
 end
