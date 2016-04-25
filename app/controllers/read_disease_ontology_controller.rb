@@ -79,17 +79,21 @@ class ReadDiseaseOntologyController < ApplicationController
           # => # => # => if yes : add key & id
           # => # => # => if not : Add id only to existing one
           if !latest_id.empty? and !latest_is_a.empty?
-          @is_a[latest_is_a] << latest_id
+            # => check if latest is_a exists as key 
+            #if @TypeDef["is_a"][latest_is_a] == nil
+            @TypeDef["is_a"][atest_is_a] << latest_id
+            #else
+            #  @TypeDef["is_a"][atest_is_a] = latest_i
+            #end #end  if key not exist
           end#end  check key & id
-        end #End is_a Contition
         # => elsif check if line starts with "def:"
         elsif (line.include? "def: ")
           # => # => Loop on all deftypes 
-          @TypeDef.each do |property|
+          @TypeDef.each_key do |k,v|
             # => # => # => check if current defType included in def line 
-            if line.include? property
+            if line.include? k.to_s
             # => # => # => # => add current ID to current deftype [value]
-              @TypeDef[property] << latest_id
+              @TypeDef[k] << latest_id
             end #end property cheking
           end #end loop on type def
         end #end Def line
