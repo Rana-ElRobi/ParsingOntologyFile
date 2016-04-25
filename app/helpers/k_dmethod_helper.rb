@@ -1,0 +1,2 @@
+module KDmethodHelper
+end
