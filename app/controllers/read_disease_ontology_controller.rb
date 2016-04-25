@@ -16,10 +16,10 @@ class ReadDiseaseOntologyController < ApplicationController
   	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
       f.each_line do |line|
   
-        if line.include? "[Term]"
-          latest_id = ""
-          latest_is_a = ""
-        end
+        
+        latest_id = ""
+        latest_is_a = ""
+        
 
         if line.include? "id: DOID:"
           latest_id = line.split(" ")[1]
