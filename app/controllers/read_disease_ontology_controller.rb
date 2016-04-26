@@ -13,7 +13,7 @@ class ReadDiseaseOntologyController < ApplicationController
   	@is_a = Hash.new { |is_a,key| is_a[key]= [] }
     latest_id = ""
     latest_is_a = ""
-  	File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
+  	File.open("#{Rails.root}/HumanDO.obo", "r") do |f|
       f.each_line do |line|
   
         
@@ -56,10 +56,13 @@ class ReadDiseaseOntologyController < ApplicationController
   def complicated_by
 
   	#@TypeDef = Hash.new { |property, key| property[key] = [] }
-    @TypeDef = {transmitted_by: [] , results_in_formation_of: [] , results_in:  [] , realized_by_supression_with: [] , realized_by: [] , part_of:  [] , occurs_with:  [] , located_in:  [] , is_a: {} }
+    @TypeDef = {transmitted_by: [] , results_in_formation_of: [] , results_in:  [] , realized_by_supression_with: [] , realized_by: [] , part_of:  [] , occurs_with:  [] , located_in:  [] }
+    @is_a =  {}
   	#Open ontology file
-    File.open("/home/rana/ParsingOntologyFile/HumanDO.obo", "r") do |f|
+    File.open("#{Rails.root}/HumanDO.obo", "r") do |f|
       #loop on each line
+      latest_id = ""
+      latest_is_a = ""
       f.each_line do |line|
         # => Clear current ID & current is_A type
         if line.include? "[Term]"
@@ -74,23 +77,24 @@ class ReadDiseaseOntologyController < ApplicationController
         # => check if line starts with "is_a:"
         # => # => get the type of is_a 
         if line.include? "is_a: DOID:"
-          latest_is_a = line.split(" ! ")[1]
+          latest_is_a = line.split(" ! ")[1].chomp
           # => # => check if is_a type is not added before to is_a keys
           # => # => # => if yes : add key & id
           # => # => # => if not : Add id only to existing one
           if !latest_id.empty? and !latest_is_a.empty?
             # => check if latest is_a exists as key 
-            #if @TypeDef["is_a"][latest_is_a] == nil
-            @TypeDef["is_a"][atest_is_a] << latest_id
+            @is_a[latest_is_a] ||= []
+
+            @is_a[latest_is_a] << latest_id
             #else
             #  @TypeDef["is_a"][atest_is_a] = latest_i
             #end #end  if key not exist
           end#end  check key & id
         # => elsif check if line starts with "def:"
         elsif (line.include? "def: ")
-          # => # => Loop on all deftypes 
+          # => # => Loop on all deftypes
           @TypeDef.each_key do |k,v|
-            # => # => # => check if current defType included in def line 
+            # => # => # => check if current defType included in def line
             if line.include? k.to_s
             # => # => # => # => add current ID to current deftype [value]
               @TypeDef[k] << latest_id

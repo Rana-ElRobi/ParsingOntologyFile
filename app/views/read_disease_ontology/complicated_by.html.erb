@@ -1,5 +1,10 @@
 <h1>ReadDiseaseOntology#complicated_by</h1>
 <p>complicated_by Property found in :</p>
-<%	@complicated_by.each do |n| %>
+<%	@TypeDef.each do |k,v| %>
+	<h1><%= k %></h1>
+	<%= v %></br>
+<% end %>
+<h2>is_a</h2>
+<%	@is_a.each do |n| %>
 	<%= n %></br>
 <% end %>
